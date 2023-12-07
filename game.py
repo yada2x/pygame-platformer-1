@@ -35,7 +35,8 @@ class Game:
             'player/jump': Animation(load_images('entities/player/jump')),
             'player/slide': Animation(load_images('entities/player/slide')),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide')),
-            'particle/leaf': Animation(load_images('particles/leaf'), img_dur=20, loop=False)
+            'particle/leaf': Animation(load_images('particles/leaf'), img_dur=20, loop=False),
+            'particle/particle': Animation(load_images('particles/particle'), img_dur=6, loop=False)
         }
 
         self.clouds = Clouds(self.assets['clouds'], 16)
@@ -82,6 +83,7 @@ class Game:
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=render_scroll)
 
+            particle: Particle
             for particle in self.particles.copy():
                 kill = particle.update()
                 particle.render(self.display, render_scroll)
@@ -100,7 +102,9 @@ class Game:
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = True
                     if event.key == pygame.K_UP:
-                        self.player.velocity[1] = -3
+                        self.player.jump()
+                    if event.key == pygame.K_x:
+                        self.player.dash()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
